@@ -15,6 +15,7 @@ def import_brands():
                 category=None,
                 logo_url=None,
                 website=b["url"],
+                # official_site=b["official_site"]
                 tags=b["letter"]
             )
             db.add(new_brand)

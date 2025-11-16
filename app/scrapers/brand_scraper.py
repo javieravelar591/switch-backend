@@ -21,18 +21,29 @@ def scrape_hbx_brands():
         for a in links:
             name = a.get_text(strip=True)
             href = a.get("href")
-
             # Ensure it's a valid brand URL
             if href and href.startswith("http"):
                 brands.append({
                     "letter": letter,
                     "name": name,
-                    "url": href
+                    "url": href,
+                    # "official_site": official_site
                 })
 
     # print(f"Found {len(brands)} brands")
     # print(brands[:10])
     return brands
 
+# def get_official_site_url(brand_name):
+#     url = f"https://api.brandfetch.io/v2/brands/{brand_name}.com"
+#     headers = {"Authorization": "Bearer"}
+#     response = requests.get(url, headers=headers)
+#     if response.ok:
+#         data = response.json()
+#         print(data)
+#         return data.get("link")
+
+
 if __name__ == "__main__":
     scrape_hbx_brands()
+    official_site = get_official_site_url("AIAIAI")
