@@ -11,5 +11,6 @@ class Brand(Base):
     category = Column(String(100), nullable=True)
     logo_url = Column(String(255), nullable=True)
     website = Column(String(255))
+    # official_site = Column(String(255))
     tags = Column(String(255))
     created_at = Column(DateTime, default=datetime.now())

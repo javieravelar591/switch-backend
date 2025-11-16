@@ -7,6 +7,7 @@ class BrandBase(BaseModel):
     category: Optional[str] = None
     logo_url: Optional[str] = None
     website: Optional[str] = None
+    # official_site: Optional[str] = None
     tags: Optional[str] = None
 
 class BrandCreate(BrandBase):
