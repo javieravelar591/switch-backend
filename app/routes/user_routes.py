@@ -52,4 +52,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
 @router.get("/favorites")
 def get_user_favorites(current_user: User = Depends(get_current_user),
                         db: Session = Depends(get_db)):
-    return current_user.favorites_brands
+    return current_user.favorite_brands
+
+# curl -X POST "http://localhost:8000/brands/1/favorite" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzY1MDU3OTA2fQ.hETvDjjcXKIitGWf5Mysqsr7FqDjOssIgB7S1c-CH2I"
+# curl -X GET "http://localhost:8000/user/favorites" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzY1MDU3OTA2fQ.hETvDjjcXKIitGWf5Mysqsr7FqDjOssIgB7S1c-CH2I"

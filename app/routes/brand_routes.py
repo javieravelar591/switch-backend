@@ -34,12 +34,17 @@ def favorite_brand(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    brand = db.query(Brand).filter(Brand.id == brand_id).first()
+    print('1')
+    user = db.query(User).filter(User.id == current_user.id).first()
+    print('2')
+    brand = db.query(models.brand.Brand).filter(models.brand.Brand.id == brand_id).first()
+    print('3')
     if not brand:
         raise HTTPException(status_code=404, detail="Brand not found")
 
-    if brand not in current_user.favorite_brands:
-        current_user.favorite_brands.append(brand)
+    if brand not in user.favorite_brands:
+        user.favorite_brands.append(brand)
         db.commit()
+        db.refresh(user)
 
     return {"message": "Brand favorited"}

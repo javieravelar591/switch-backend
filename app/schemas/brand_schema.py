@@ -8,7 +8,7 @@ class BrandBase(BaseModel):
     logo_url: Optional[str] = None
     website: Optional[str] = None
     # official_site: Optional[str] = None
-    tags: Optional[str] = None
+    tags: list[str] = []
 
 class BrandCreate(BrandBase):
     pass
