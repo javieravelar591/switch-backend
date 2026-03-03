@@ -34,11 +34,8 @@ def favorite_brand(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    print('1')
     user = db.query(User).filter(User.id == current_user.id).first()
-    print('2')
     brand = db.query(models.brand.Brand).filter(models.brand.Brand.id == brand_id).first()
-    print('3')
     if not brand:
         raise HTTPException(status_code=404, detail="Brand not found")
 

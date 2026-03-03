@@ -29,19 +29,7 @@ def scrape_hbx_brands():
                     "url": href,
                     # "official_site": official_site
                 })
-
-    # print(f"Found {len(brands)} brands")
-    # print(brands[:10])
     return brands
-
-# def get_official_site_url(brand_name):
-#     url = f"https://api.brandfetch.io/v2/brands/{brand_name}.com"
-#     headers = {"Authorization": "Bearer"}
-#     response = requests.get(url, headers=headers)
-#     if response.ok:
-#         data = response.json()
-#         print(data)
-#         return data.get("link")
 
 
 if __name__ == "__main__":

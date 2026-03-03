@@ -4,3 +4,4 @@ __pycache__/
 .env
 test.py
 postgres-data/
+docker-compose.yml
