@@ -5,3 +5,5 @@ pydantic
 python-dotenv
 requests
 beautifulsoup4
+bcrypt
+psycopg2-binary

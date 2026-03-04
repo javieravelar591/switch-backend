@@ -15,9 +15,9 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/", response_model=list[brand_schema.BrandBase])
-def get_brands(db: Session = Depends(get_db)):
-    brands = db.query(models.brand.Brand).all()
+@router.get("/", response_model=list[brand_schema.Brand])
+def get_brands(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):                                                  
+    brands = db.query(models.brand.Brand).offset(skip).limit(limit).all()
     return brands
 
 @router.post("/", response_model=brand_schema.Brand)

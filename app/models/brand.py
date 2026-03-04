@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, Text, DateTime, func
 from app.database import Base
 from app.models.association_tables.association_tables import user_favorites
 from sqlalchemy.orm import relationship
@@ -16,7 +15,7 @@ class Brand(Base):
     website = Column(String(255))
     # official_site = Column(String(255))
     tags = Column(ARRAY(String))
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime, default=func.now())
     favorited_by = relationship(
         "User",
         secondary=user_favorites,

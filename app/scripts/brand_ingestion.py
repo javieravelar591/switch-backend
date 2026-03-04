@@ -1,6 +1,7 @@
 from app.database import SessionLocal, engine
 from app.scrapers import brand_scraper
 from app.models.brand import Brand
+from app.models.user import User  # noqa: F401 - required for SQLAlchemy to resolve relationships
 
 def import_brands():
     db = SessionLocal()
