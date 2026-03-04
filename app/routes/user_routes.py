@@ -17,7 +17,7 @@ router = APIRouter(prefix="/user", tags=["users"])
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(UserModel).filter(UserModel.email == user.email).first()
     if existing:
-        raise HTTPException(status_code=400, detail="User already exists")
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     
     hashed_password = hash_password(user.password)
     db_user = UserModel(email=user.email, username=user.username, password=hashed_password)

@@ -11,13 +11,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Switch API", version="1.0.0")
 
-origins = ["http://localhost:3000"]
+import os
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 
 Base.metadata.create_all(bind=engine)
