@@ -15,9 +15,12 @@ class Brand(Base):
     website = Column(String(255))
     # official_site = Column(String(255))
     tags = Column(ARRAY(String))
+    region = Column(String(100), nullable=True)
+    country = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=func.now())
     favorited_by = relationship(
         "User",
         secondary=user_favorites,
         back_populates="favorite_brands"
     )
+    articles = relationship("BrandArticle", back_populates="brand", order_by="BrandArticle.published_at.desc()")

@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
@@ -37,6 +38,7 @@ def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
         key="access_token",
         value=access_token,
         httponly=True,
+        secure=os.getenv("ENV", "development") == "production",
         samesite="lax",
         max_age=60 * 60 * 24 * 7,  # 7 days
     )

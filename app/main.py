@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from app.database import engine, Base
 from app.routes import brand_routes
 from app.routes import user_routes
-from app.models import brand as brand_model
+from app.models import brand as brand_model          # noqa: must import before brand_article
+from app.models import brand_article                 # noqa: registers BrandArticle with Base
 from app.schemas import brand_schema
 from fastapi.middleware.cors import CORSMiddleware
 
