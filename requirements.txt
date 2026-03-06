@@ -8,3 +8,6 @@ beautifulsoup4
 bcrypt
 psycopg2-binary
 slowapi
+feedparser
+python-jose[cryptography]
+email-validator

@@ -9,4 +9,3 @@ docker-compose.yml
 brand_ingestion.py
 brand_enrichment.py
 brand_seed_data.py
-news_fetcher.py
