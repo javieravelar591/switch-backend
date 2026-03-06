@@ -36,12 +36,13 @@ def login(request: Request, user: UserLogin, response: Response, db: Session = D
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     access_token = create_access_token(data={"sub": str(db_user.id)})
+    is_production = os.getenv("ENV", "development") == "production"
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=os.getenv("ENV", "development") == "production",
-        samesite="lax",
+        secure=is_production,
+        samesite="none" if is_production else "lax",
         max_age=60 * 60 * 24 * 7,  # 7 days
     )
     return {"message": "Login successful"}
