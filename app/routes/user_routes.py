@@ -15,7 +15,7 @@ from app.limiter import limiter
 
 router = APIRouter(prefix="/user", tags=["users"])
 
-@router.post("/", response_model=User)
+@router.post("", response_model=User)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing = db.query(UserModel).filter(UserModel.email == user.email).first()
     if existing:

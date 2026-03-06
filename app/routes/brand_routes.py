@@ -23,7 +23,7 @@ def get_db():
 
 POPULAR_THRESHOLD = 3
 
-@router.get("/", response_model=list[brand_schema.Brand])
+@router.get("", response_model=list[brand_schema.Brand])
 def get_brands(
     skip: int = Query(default=0, ge=0, le=10000),
     limit: int = Query(default=10, ge=1, le=100),
