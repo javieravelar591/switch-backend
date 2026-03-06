@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Base.metadata.drop_all(bind=engine)
 # Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Switch API", version="1.0.0")
+app = FastAPI(title="Switch API", version="1.0.0", redirect_slashes=False)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
