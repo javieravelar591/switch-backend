@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.user import User as UserModel
@@ -11,6 +11,7 @@ from app.utils.auth import (
     get_current_user,
     get_db,
 )
+from app.limiter import limiter
 
 router = APIRouter(prefix="/user", tags=["users"])
 
@@ -28,7 +29,8 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @router.post("/login")
-def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request, user: UserLogin, response: Response, db: Session = Depends(get_db)):
     db_user = db.query(UserModel).filter(UserModel.email == user.email).first()
     if not db_user or not verify_password(user.password, db_user.password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")

@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.limiter import limiter
 from app.database import engine, Base
 from app.routes import brand_routes
 from app.routes import user_routes
@@ -11,6 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Switch API", version="1.0.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 import os
 origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
