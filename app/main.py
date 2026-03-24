@@ -5,6 +5,7 @@ from app.limiter import limiter
 from app.database import engine, Base
 from app.routes import brand_routes
 from app.routes import user_routes
+from app.routes import chat_routes
 from app.models import brand as brand_model          # noqa: must import before brand_article
 from app.models import brand_article                 # noqa: registers BrandArticle with Base
 from app.schemas import brand_schema
@@ -31,6 +32,7 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(brand_routes.router)
 app.include_router(user_routes.router)
+app.include_router(chat_routes.router)
 
 @app.get("/")
 def root():

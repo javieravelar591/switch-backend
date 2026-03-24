@@ -11,3 +11,4 @@ slowapi
 feedparser
 python-jose[cryptography]
 email-validator
+anthropic
