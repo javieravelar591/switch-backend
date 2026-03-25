@@ -29,6 +29,7 @@ class User(UserBase):
     id: int
     email: str
     username: str
+    style_profile: str | None = None
     favorite_brands: list[BrandBase] = []
 
     class Config:

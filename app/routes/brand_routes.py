@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional
@@ -11,6 +11,7 @@ from app.models.association_tables.association_tables import user_favorites
 from app.services.news_fetcher import fetch_all
 from app.utils.auth import get_current_user
 from app.models.user import User
+from app.services.style_profile import generate_style_profile, MIN_FAVORITES
 
 router = APIRouter(prefix="/brands", tags=["brands"])
 
@@ -160,9 +161,21 @@ def get_brand_articles(brand_id: int, db: Session = Depends(get_db)):
     )
 
 
+def _refresh_style_profile(user_id: int):
+    """Background task: regenerate style profile after a favorite toggle."""
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if user and len(user.favorite_brands) >= MIN_FAVORITES:
+            generate_style_profile(user, db)
+    finally:
+        db.close()
+
+
 @router.post("/{brand_id}/favorite")
 def toggle_favorite(
     brand_id: int,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -174,8 +187,10 @@ def toggle_favorite(
     if brand in user.favorite_brands:
         user.favorite_brands.remove(brand)
         db.commit()
+        background_tasks.add_task(_refresh_style_profile, user.id)
         return {"favorited": False}
     else:
         user.favorite_brands.append(brand)
         db.commit()
+        background_tasks.add_task(_refresh_style_profile, user.id)
         return {"favorited": True}

@@ -47,7 +47,9 @@ def build_system_prompt(db: Session, user: User | None) -> str:
         for b in brands
     )
 
-    if user and user.favorite_brands:
+    if user and user.style_profile:
+        user_context = f"\nUser style profile: {user.style_profile}"
+    elif user and user.favorite_brands:
         fav_names = ", ".join(b.name for b in user.favorite_brands[:20])
         user_context = f"\nThe user has favorited these brands: {fav_names}. Use this to personalise your recommendations."
     else:

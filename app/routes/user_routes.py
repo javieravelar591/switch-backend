@@ -12,6 +12,7 @@ from app.utils.auth import (
     get_db,
 )
 from app.limiter import limiter
+from app.services.style_profile import generate_style_profile, MIN_FAVORITES
 
 router = APIRouter(prefix="/user", tags=["users"])
 
@@ -69,3 +70,17 @@ def get_user(user_id: int, current_user: User = Depends(get_current_user), db: S
 def get_user_favorites(current_user: User = Depends(get_current_user),
                         db: Session = Depends(get_db)):
     return current_user.favorite_brands
+
+
+@router.post("/style-profile/generate")
+def generate_profile(
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if len(current_user.favorite_brands) < MIN_FAVORITES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Favorite at least {MIN_FAVORITES} brands to generate a style profile.",
+        )
+    profile = generate_style_profile(current_user, db)
+    return {"style_profile": profile}

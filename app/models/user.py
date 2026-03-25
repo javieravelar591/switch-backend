@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Text
 from app.database import Base
 from app.models.association_tables.association_tables import user_favorites
 from sqlalchemy.orm import relationship
@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     username = Column(String, unique=True, nullable=True)
     password = Column(String, nullable=False)
+    style_profile = Column(Text, nullable=True)
     favorite_brands = relationship(
         "Brand",
         secondary=user_favorites,
