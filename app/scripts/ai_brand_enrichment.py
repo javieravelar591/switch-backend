@@ -102,7 +102,7 @@ def fetch_logo(website: str | None, brand_name: str) -> str | None:
         try:
             res = requests.get(url, headers=HEADERS, timeout=5)
             if res.status_code == 200 and len(res.content) > 500:
-                return url
+                return f"logodev:{domain}"
         except Exception:
             continue
 
