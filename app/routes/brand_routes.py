@@ -162,7 +162,6 @@ def get_brand_articles(brand_id: int, db: Session = Depends(get_db)):
 
 
 def _refresh_style_profile(user_id: int):
-    """Background task: regenerate style profile after a favorite toggle."""
     db = SessionLocal()
     try:
         user = db.query(User).filter(User.id == user_id).first()
