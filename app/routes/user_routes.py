@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.user import User as UserModel
-from app.schemas.user_schema import UserCreate, User, UserLogin
+from app.schemas.user_schema import UserCreate, User, UserLogin, QuizAnswers
 from app.utils.auth import (
     hash_password,
     verify_password,
@@ -12,7 +12,7 @@ from app.utils.auth import (
     get_db,
 )
 from app.limiter import limiter
-from app.services.style_profile import generate_style_profile, MIN_FAVORITES
+from app.services.style_profile import generate_style_profile, generate_style_profile_from_quiz, MIN_FAVORITES
 
 router = APIRouter(prefix="/user", tags=["users"])
 
@@ -76,6 +76,18 @@ def get_user(user_id: int, current_user: User = Depends(get_current_user), db: S
 def get_user_favorites(current_user: User = Depends(get_current_user),
                         db: Session = Depends(get_db)):
     return current_user.favorite_brands
+
+
+@router.post("/style-profile/onboard")
+def onboard_style_profile(
+    answers: QuizAnswers,
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    profile = generate_style_profile_from_quiz(
+        answers.aesthetics, answers.budget, answers.values, current_user, db
+    )
+    return {"style_profile": profile}
 
 
 @router.post("/style-profile/generate")

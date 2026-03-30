@@ -78,10 +78,28 @@ def get_brands(
 @router.get("/recommendations", response_model=list[brand_schema.Brand])
 def get_recommendations(
     limit: int = Query(default=12, ge=1, le=50),
+    aesthetics: list[str] = Query(default=[]),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     favorited_ids = {b.id for b in current_user.favorite_brands}
+    candidates_query = db.query(models.brand.Brand)
+    if favorited_ids:
+        candidates_query = candidates_query.filter(models.brand.Brand.id.notin_(favorited_ids))
+    candidates = candidates_query.all()
+
+    if not favorited_ids and aesthetics:
+        lower_aesthetics = [a.lower() for a in aesthetics]
+        scored = []
+        for brand in candidates:
+            category_match = (brand.category or "").lower() in lower_aesthetics
+            tag_matches = sum(1 for t in (brand.tags or []) if t.lower() in lower_aesthetics)
+            score = (2 if category_match else 0) + tag_matches
+            if score > 0:
+                scored.append((score, brand))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [b for _, b in scored[:limit]]
+
     if not favorited_ids:
         return []
 
@@ -89,10 +107,6 @@ def get_recommendations(
     for brand in current_user.favorite_brands:
         for tag in (brand.tags or []):
             tag_weights[tag] = tag_weights.get(tag, 0) + 1
-
-    candidates = db.query(models.brand.Brand).filter(
-        models.brand.Brand.id.notin_(favorited_ids)
-    ).all()
 
     scored = []
     for brand in candidates:

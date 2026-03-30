@@ -34,3 +34,21 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
+# User Style quiz
+class QuizAnswers(BaseModel):
+    aesthetics: list[str] = []
+    budget: str = ""
+    values: list[str] = []
+
+    @field_validator("aesthetics", "values")
+    @classmethod
+    def limit_list(cls, v: list[str]) -> list[str]:
+        if len(v) > 10:
+            raise ValueError("Too many selections")
+        return [s[:100] for s in v]
+
+    @field_validator("budget")
+    @classmethod
+    def limit_budget(cls, v: str) -> str:
+        return v[:100]
