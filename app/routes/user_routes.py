@@ -50,7 +50,13 @@ def login(request: Request, user: UserLogin, response: Response, db: Session = D
 
 @router.post("/logout")
 def logout(response: Response):
-    response.delete_cookie("access_token")
+    is_production = os.getenv("ENV", "development") == "production"
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        secure=is_production,
+        samesite="none" if is_production else "lax",
+    )
     return {"message": "Logged out"}
 
 @router.get("/me", response_model=User)
